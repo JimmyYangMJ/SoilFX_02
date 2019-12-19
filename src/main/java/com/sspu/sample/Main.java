@@ -63,7 +63,7 @@ public class Main extends Application {
         FXMLLoader Chart = new FXMLLoader(getClass().getResource("/fxml/lineChart.fxml"));
         HBox portHBox = portConnect.load();
         VBox RealTimeVBox = RealTimeInfo.load();
-        AnchorPane ChartAnchorPane = Chart.load();
+        //AnchorPane ChartAnchorPane = Chart.load();
         bp.setTop(portHBox);
         bp.setLeft(RealTimeVBox);
         bp.setCenter(lineChart);

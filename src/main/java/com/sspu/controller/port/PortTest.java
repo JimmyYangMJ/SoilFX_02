@@ -215,6 +215,14 @@ public class PortTest implements Initializable , SerialPortEventListener {
                         inputStream.read(readBuffer);
                         readStr += new String(readBuffer).trim();
                     }
+                    int messageLength = (int)readBuffer[0];
+                    message = new int[messageLength];
+                    System.out.println("2接收数据---长度--" + messageLength);
+                    for (int i = 0; i < messageLength; i++) {
+                        int temp = (int)(readBuffer[i] & 0xff);
+                        System.out.print( temp + "/ ");
+                    }
+                    System.out.println("********");
                     /**
                      * s2为接收到数据 格式： 16进制+CRC校验码
                      *t1存放CRC校验前的数据，t2为CRC校验后的数据
@@ -242,11 +250,11 @@ public class PortTest implements Initializable , SerialPortEventListener {
                         System.out.println("CRC:"+a+" "+b);
                         /*从字节数组中读取crc校验码*/
                         System.out.println("CRC:"+Integer.toHexString(0xff & receiveByte[10])+" "+Integer.toHexString(0xff & receiveByte[11]));
-                        break;//数据舍弃
+                        //break;//数据舍弃
                     }
 
                     /**********************/
-                    int messageLength = (int)readBuffer[0];
+                    //int messageLength = (int)readBuffer[0];
                     message = new int[messageLength];
                     System.out.println("接收数据---长度--" + messageLength);
                     for (int i = 0; i < messageLength; i++) {
@@ -272,17 +280,30 @@ public class PortTest implements Initializable , SerialPortEventListener {
      * 向串口发送消息
      */
     public void ComSent() {
+
         String message = TFcomSentText.getText();
-        sendDataToSeriaPort(message);
+        String[] messageArray = message.split(" ");
+        String hexString = message;
+        hexString = hexString.replaceAll(" ", "");
+        int len = hexString.length();
+        byte[] bytes = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            // 两位一组，表示一个字节,把这样表示的16进制字符串，还原成一个字节
+            bytes[i / 2] = (byte) ((Character.digit(hexString.charAt(i), 16) << 4) + Character
+                    .digit(hexString.charAt(i+1), 16));
+        }
+        sendDataToSeriaPort(bytes);
     }
 
     /**
      * 给串行端口发送数据
+     * (发送数据)
      * @since 2019-4-28 上午12:05:00
+     * @param message
      */
-    public void sendDataToSeriaPort(String message) {
+    public void sendDataToSeriaPort(byte[] message) {
         try {
-            outputStream.write(message.getBytes());
+            outputStream.write(message);
             outputStream.flush();
             realTimeInfo.log("已经发送消息：" + message);
             System.out.println("向端口发送数据成功");

@@ -59,7 +59,6 @@ public class CRC {
 
     public static byte[]  AddCRC(byte[] data) {
         int CRC;
-
         data[data[0]-2]=data[data[0]-1]=0x00;
         CRC=GenerateCRC(data,data[0]); //CRC编码值
         data[data[0]-2]= (byte) ((CRC>>8)&0x0ff);
@@ -95,14 +94,26 @@ public class CRC {
     }
 
     public static void main(String[] args) throws UnsupportedEncodingException {
-        byte []buffer = new byte[] {(byte)0x0C,0x01,0x02,0x03,0x04,0x05,0x03,0x12,0x12,0x34,0x00,0x00};
-        byte []buffer2 = new byte[] {(byte)0x0C,0x02,0x12,0x01,0x15,0x01,0x09,0x02,0x01,0x05,0x00,0x00}; // 下 -- 上
+        byte []buffer = new byte[] {(byte)0x0C,0x02,0x12,0x21,0x51,0x30,0x0f, (byte) 0xfE,0x0f, (byte) 0xFE,0x00,0x00};
+        byte []buffer2 = new byte[] {0x0C,0x02,0x12,0x21,0x51,0x30,0x0f, (byte) 0x99,0x11, (byte) 0x11,0x00,0x00}; // 下 -- 上
 
-         buffer = AddCRC(buffer2);
-
-         String s = bytes_String16(buffer);
-         System.out.println(s);
-         System.out.println("CRC:"+Integer.toHexString(0xff & buffer[10])+" "+Integer.toHexString(0xff & buffer[11]));
+        System.out.println("<");
+        for (int i = 0; i < buffer2.length; i++) {
+            int temp = (int)(buffer2[i] & 0xff);
+            System.out.print( Integer.toHexString(temp) + "/");
+        }
+        AddCRC(buffer2);
+        System.out.println("");
+        for (int i = 0; i < buffer2.length; i++) {
+            int temp = (int)(buffer2[i] & 0xff);
+            System.out.print( Integer.toHexString(temp) + "/");
+        }
+//        System.out.println();
+//
+//
+//         String s = bytes_String16(buffer2);
+//         System.out.println(s);
+//         System.out.println("CRC:"+Integer.toHexString(0xff & buffer2[buffer2.length-2])+" "+Integer.toHexString(0xff & buffer2[buffer2.length-1]));
     }
 
 }

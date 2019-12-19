@@ -65,7 +65,7 @@ public class JavaFXChart implements Runnable {
             System.out.println("最近一次接收 AD:" + ad + " 基准电压:" + ad_base);
 
             try {
-                seriesArray[node].getData().add(new XYChart.Data(time, ad));//实时接收
+                seriesArray[node].getData().add(new XYChart.Data(time, ad-10));//实时接收
             }catch (Exception e){
 
             }
