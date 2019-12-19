@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.shape.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Text?>
+
+<HBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="148.0" prefWidth="554.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sspu.controller.port.PortTest">
+   <children>
+      <AnchorPane prefHeight="100.0" prefWidth="122.0">
+         <children>
+            <Button fx:id="commPortIdentifier" layoutX="9.0" layoutY="14.0" mnemonicParsing="false" onAction="#StartComClicked" text="1. 识别端口" />
+            <Button layoutX="10.0" layoutY="63.0" mnemonicParsing="false" onAction="#CloseCom" text="[关闭端口 ]" />
+         </children>
+      </AnchorPane>
+      <AnchorPane prefHeight="148.0" prefWidth="175.0">
+         <children>
+            <GridPane prefHeight="112.0" prefWidth="135.0">
+               <children>
+                  <ChoiceBox fx:id="CBdateBit" prefHeight="18.0" prefWidth="85.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <ChoiceBox fx:id="CBparity" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <ChoiceBox fx:id="CBbaudRate" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <ChoiceBox fx:id="CBstopBit" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="数据位" GridPane.rowIndex="1" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="校验位" GridPane.rowIndex="2" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="波特率" GridPane.rowIndex="3" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="停止位" GridPane.rowIndex="4" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="2.  串口设置" wrappingWidth="88.02734375" />
+               </children>
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="10.0" prefWidth="50.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="161.0" minWidth="10.0" prefWidth="85.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+            </GridPane>
+         </children>
+      </AnchorPane>
+      <AnchorPane prefHeight="50.0" prefWidth="130.0">
+         <children>
+            <Text layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="3. 选择接收端口" />
+            <ChoiceBox fx:id="com_choice" layoutY="22.0" prefHeight="23.0" prefWidth="98.0">
+               <contextMenu>
+                  <ContextMenu>
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="默认" />
+                     </items>
+                  </ContextMenu>
+               </contextMenu>
+            </ChoiceBox>
+            <Button fx:id="confirm" layoutX="10.0" layoutY="51.0" mnemonicParsing="false" onAction="#selectPort" text="4. 确定端口" />
+            <Button layoutX="1.0" layoutY="84.0" mnemonicParsing="false" onAction="#startRead" prefHeight="23.0" prefWidth="105.0" text="5. 开始接收端口" />
+         </children>
+      </AnchorPane>
+      <AnchorPane prefHeight="148.0" prefWidth="218.0">
+         <children>
+            <TextField fx:id="TFcomSentText" layoutX="14.0" layoutY="39.0" prefHeight="37.0" prefWidth="161.0" />
+            <Button layoutX="135.0" layoutY="87.0" mnemonicParsing="false" onAction="#ComSent" text="发送" />
+            <Text layoutX="20.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="向串口发送消息" wrappingWidth="105.0" />
+         </children>
+      </AnchorPane>
+   </children>
+</HBox>
