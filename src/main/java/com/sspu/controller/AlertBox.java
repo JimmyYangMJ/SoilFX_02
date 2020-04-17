@@ -15,8 +15,8 @@ public class AlertBox {
 
     /**
      * 提示窗口弹出
-     * @param title
-     * @param message
+     * @param title 标题
+     * @param message 提示消息
      */
     public static void display(String title, String message) {
         Stage window = new Stage();

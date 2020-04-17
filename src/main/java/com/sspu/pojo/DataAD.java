@@ -1,10 +1,13 @@
 package com.sspu.pojo;
 
 /**
+ * AD 数据
+ * 表格显示
  * @author ymj
  * @Date： 2019/12/18 20:25
  */
 public class DataAD {
+
     private int node;
     private double ad;
     private double ad_base;

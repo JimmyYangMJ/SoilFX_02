@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="117.0" prefWidth="330.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sspu.controller.send.PortSend">
+   <children>
+      <AnchorPane prefHeight="117.0" prefWidth="257.0">
+         <children>
+            <Button fx:id="ensure" layoutX="131.0" layoutY="80.0" mnemonicParsing="false" onAction="#intervalSend" text="确定" />
+            <ChoiceBox fx:id="nodeId" layoutX="98.0" layoutY="44.0" prefHeight="29.0" prefWidth="79.0" />
+            <Label layoutX="24.0" layoutY="14.0" prefHeight="23.0" prefWidth="153.0" text="确定结点检测频率：秒">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="24.0" layoutY="47.0" prefHeight="23.0" prefWidth="63.0" text="结点号：">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="interval" layoutX="18.0" layoutY="80.0" prefHeight="23.0" prefWidth="79.0" />
+            <Label layoutX="101.0" layoutY="80.0" prefHeight="23.0" prefWidth="16.0" text="s">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Button fx:id="pause" layoutX="203.0" layoutY="14.0" mnemonicParsing="false" onAction="#pause" text="暂停" />
+            <Button fx:id="start" layoutX="203.0" layoutY="47.0" mnemonicParsing="false" onAction="#start" text="继续" />
+            <Button fx:id="end" layoutX="203.0" layoutY="80.0" mnemonicParsing="false" onAction="#end" text="结束" />
+         </children>
+      </AnchorPane>
+   </children>
+</HBox>

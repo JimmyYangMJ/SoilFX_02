@@ -6,8 +6,8 @@ import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.TooManyListenersException;
 
-/** CRC 校验
- *
+/**
+ *  CRC 校验
  */
 public class CRC {
 
@@ -78,7 +78,8 @@ public class CRC {
             t=  ((oldcrc16 >> 8) & 0xFF); //要移出的字节的值
             oldcrc=crcItuTable[t]; //根据移出的字节的值查表
             c=data[charcnt]; //新移进来的字节值
-            oldcrc16= ((oldcrc16 << 8)) | c; //将新移进来的字节值添在寄存器末字节中
+            oldcrc16= ((oldcrc16 << 8)) | (c&0xFF); //将新移进来的字节值添在寄存器末字节中
+//            oldcrc16= ((oldcrc16 << 8)) | c; //将新移进来的字节值添在寄存器末字节中
             oldcrc16=oldcrc16^oldcrc; //将寄存器与查出的值进行xor 运算
             charcnt++;
         }
