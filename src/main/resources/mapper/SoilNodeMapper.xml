@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sspu.dao.SoilNodeMapper">
+
+
+    <select id="selectSoilNodeSet" resultType="com.sspu.pojo.SoilNode">
+        select *
+        from soil_node
+    </select>
+
+</mapper>
