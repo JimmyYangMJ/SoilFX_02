@@ -85,23 +85,29 @@ public class Main extends Application {
         FXMLLoader dataBaseForm = new FXMLLoader(getClass().getResource("/fxml/dataBaseForm.fxml"));
         /** 检测频率 */
         FXMLLoader portSend = new FXMLLoader(getClass().getResource("/fxml/portSend.fxml"));
+        /** 云端通信 NIO */
+        FXMLLoader cloudNIO = new FXMLLoader(getClass().getResource("/fxml/cloudNIO.fxml"));
 
         /** 1. Top：顶部视图容器 */
         HBox topBox = new HBox();
 
-        /** load 串口初始化 视图组件（Top） */
+        /** load 串口初始化 视图组件（Top1） */
         HBox portHBox = portConnect.load();
+
+        /** 定时监测 （Top 2） */
+        HBox portSendHBox = portSend.load();
+
+        /** 云端通信 （Top3）*/
+        HBox cloudNIOBox = cloudNIO.load();
 
         /** 2. Left：左边视图容器  */
         VBox RealTimeVBox = RealTimeInfo.load();
 
         /** 3. Right：右边视图容器 */
         VBox dataBaseFormVBox = dataBaseForm.load();
-        /** 向串口发送消息（测试用）（Top） */
-        HBox portSendHBox = portSend.load();
         //AnchorPane ChartAnchorPane = Chart.load();
-        /** Top 包括：1. 提示框 2. 实时水势电压数据 */
-        topBox.getChildren().addAll(portHBox, portSendHBox);
+        /** Top 1，2，3*/
+        topBox.getChildren().addAll(portHBox, portSendHBox, cloudNIOBox);
 
         /** bp 加载 fxml 视图文件 */
         bp.setTop(topBox);

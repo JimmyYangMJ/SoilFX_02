@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="99.0" prefWidth="343.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sspu.controller.CloudView">
+   <children>
+      <AnchorPane prefHeight="175.0" prefWidth="330.0">
+         <children>
+            <Button layoutX="222.0" layoutY="68.0" mnemonicParsing="false" text="手动同步" />
+            <Label layoutX="14.0" layoutY="14.0" text="云端同步">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label layoutX="14.0" layoutY="70.0" text="当前状态：">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="updateTime" layoutX="173.0" layoutY="36.0" text="2020.03.20 12:01:59">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <RadioButton fx:id="realSyn" layoutX="87.0" layoutY="16.0" mnemonicParsing="false" onAction="#realSynFunction" text="实时同步" />
+            <RadioButton fx:id="closeSyn" layoutX="87.0" layoutY="46.0" mnemonicParsing="false" onAction="#closeSynFunction" text="关闭同步" />
+            <Label fx:id="status" layoutX="90.0" layoutY="69.0" text="离线" textFill="#ee0404">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label layoutX="173.0" layoutY="14.0" text="最近更新时间：">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+   </children>
+</HBox>

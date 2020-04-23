@@ -33,6 +33,7 @@ public class SendInterval implements Runnable{
     调用该方法实现恢复线程的运行
      */
     public void resumeThread(){
+
         pause =false;
         synchronized (lock){
             lock.notify();
@@ -73,6 +74,7 @@ public class SendInterval implements Runnable{
                 e.printStackTrace();
             }
             String message = "09 02 21 12 15 01 00 6f 04";
+
             try {
                 PortTest.outputStream.write(stringTransByte(message));
                 PortTest.outputStream.flush();

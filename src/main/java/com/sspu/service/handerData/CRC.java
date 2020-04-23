@@ -1,5 +1,7 @@
 package com.sspu.service.handerData;
 
+import org.junit.jupiter.api.Test;
+
 import java.io.*;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -86,6 +88,7 @@ public class CRC {
        crc16=oldcrc16;
         return crc16;
     }
+
     public static String bytes_String16(byte[] b) {
         StringBuilder sb = new StringBuilder();
         for(int i=0;i<b.length;i++) {
@@ -94,7 +97,11 @@ public class CRC {
         return sb.toString();
     }
 
-    public static void main(String[] args) throws UnsupportedEncodingException {
+    /**
+     * 测试方法
+     */
+    @Test
+    static void test1(){
         byte []buffer = new byte[] {(byte)0x0C,0x02,0x12,0x21,0x51,0x30,0x0f, (byte) 0xfE,0x0f, (byte) 0xFE,0x00,0x00};
         byte []buffer2 = new byte[] {0x0C,0x02,0x12,0x21,0x51,0x30,0x0f, (byte) 0x99,0x11, (byte) 0x11,0x00,0x00}; // 下 -- 上
 
@@ -116,5 +123,6 @@ public class CRC {
 //         System.out.println(s);
 //         System.out.println("CRC:"+Integer.toHexString(0xff & buffer2[buffer2.length-2])+" "+Integer.toHexString(0xff & buffer2[buffer2.length-1]));
     }
+
 
 }

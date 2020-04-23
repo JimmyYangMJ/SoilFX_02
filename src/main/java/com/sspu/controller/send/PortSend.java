@@ -16,12 +16,14 @@ public class PortSend {
 
     @FXML ChoiceBox<String> nodeId;
     @FXML TextField interval;
+
     /** 定时发送数据线程 */
     static Thread intervalSend;
 
     static SendInterval sendInterval;
 
-    /** 控件：确定 */
+    /** 控件：确定
+     * service： SendInterval*/
     @FXML
     public void intervalSend(){
         /** 获取 时间间隔 */
