@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
+import org.springframework.stereotype.Controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -19,18 +20,21 @@ import java.util.ResourceBundle;
 public class CloudView implements Initializable {
 
     /** 实时同步 */
-    @FXML  RadioButton realSyn;
+    @FXML  public RadioButton realSyn;
     /** 关闭同步 */
-    @FXML  RadioButton closeSyn;
+    @FXML  public RadioButton closeSyn;
 
     /** 最近更新时间 */
     @FXML Label updateTime;
 
     /** 当前状态 */
-    @FXML Label status;
+    @FXML public Label status;
+
 
     public static NioClient nioClient= new NioClient();
     public static Thread threadNioClient;
+
+    private static Object lock = new Object();
 
     public CloudView(){
         // NIO 云端通信
@@ -43,18 +47,20 @@ public class CloudView implements Initializable {
     }
 
     /** 实时同步 */
-    public void realSynFunction() {
+    public void realSynFunction() throws InterruptedException {
         threadNioClient = new Thread(nioClient);
         threadNioClient.setDaemon(true);
         threadNioClient.start();
         System.out.println("实时同步");
         status.setText("同步中");
-    }
 
+    }
     public void closeSynFunction() {
 
-        System.out.println("关闭同步");
-        status.setText("离线");
+            System.out.println("关闭同步");
+            threadNioClient.interrupt();
+            status.setText("离线");
+
     }
 
     @Override
@@ -64,5 +70,7 @@ public class CloudView implements Initializable {
         realSyn.setToggleGroup(group);
         closeSyn.setToggleGroup(group);
         closeSyn.setSelected(true);
+
+        Channel.controllers.put(this.getClass().getSimpleName(), this);
     }
 }

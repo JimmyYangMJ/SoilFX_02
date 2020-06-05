@@ -1,8 +1,10 @@
 package com.sspu.startUp;
 
+import com.sspu.constants.SpringFxmlLoader;
 import com.sspu.controller.chart.JavaFXChart;
 import com.sspu.controller.port.PortTest;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
@@ -12,16 +14,13 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.springframework.context.annotation.Configuration;
 
 import static com.sspu.controller.chart.JavaFXChart.seriesArray;
 
+
 public class Main extends Application {
 
-    /**
-     * 总体布局
-     * 分为
-     */
-    private BorderPane bp = new BorderPane();
 
     // Thread javaFXLine ;
     /** X 轴为 时间 */
@@ -30,7 +29,7 @@ public class Main extends Application {
     NumberAxis yAxis;
 
     /** 折线图 视图 */
-    LineChart<String, Number> lineChart;
+    public static LineChart<String, Number> lineChart;
 
     /**
      * 水势折线图
@@ -63,6 +62,7 @@ public class Main extends Application {
         seriesArray[1].setName(node01);
 
         lineChart.getData().addAll(seriesArray[1]);
+
     }//水势折线图
 
     /**
@@ -76,51 +76,16 @@ public class Main extends Application {
         /** 启动动态折线图线程 */
         JavaFXChart();
 
-        /** 串口设置 */
-        FXMLLoader portConnect = new FXMLLoader(getClass().getResource("/fxml/portTest.fxml"));
-        /** 实时信息 */
-        FXMLLoader RealTimeInfo = new FXMLLoader(getClass().getResource("/fxml/realTimeInfo.fxml"));
-        //FXMLLoader Chart = new FXMLLoader(getClass().getResource("/fxml/lineChart.fxml"));
-        /** 数据表显示 */
-        FXMLLoader dataBaseForm = new FXMLLoader(getClass().getResource("/fxml/dataBaseForm.fxml"));
-        /** 检测频率 */
-        FXMLLoader portSend = new FXMLLoader(getClass().getResource("/fxml/portSend.fxml"));
-        /** 云端通信 NIO */
-        FXMLLoader cloudNIO = new FXMLLoader(getClass().getResource("/fxml/cloudNIO.fxml"));
-
-        /** 1. Top：顶部视图容器 */
-        HBox topBox = new HBox();
-
-        /** load 串口初始化 视图组件（Top1） */
-        HBox portHBox = portConnect.load();
-
-        /** 定时监测 （Top 2） */
-        HBox portSendHBox = portSend.load();
-
-        /** 云端通信 （Top3）*/
-        HBox cloudNIOBox = cloudNIO.load();
-
-        /** 2. Left：左边视图容器  */
-        VBox RealTimeVBox = RealTimeInfo.load();
-
-        /** 3. Right：右边视图容器 */
-        VBox dataBaseFormVBox = dataBaseForm.load();
-        //AnchorPane ChartAnchorPane = Chart.load();
-        /** Top 1，2，3*/
-        topBox.getChildren().addAll(portHBox, portSendHBox, cloudNIOBox);
-
-        /** bp 加载 fxml 视图文件 */
-        bp.setTop(topBox);
-        bp.setLeft(RealTimeVBox);
-        bp.setCenter(lineChart);  /** 4. Center ：中间视图容器 */
-        bp.setRight(dataBaseFormVBox);
-
+        Platform.setImplicitExit(true);
+        ScreenManager screens = new ScreenManager();
+        screens.setPrimaryStage(primaryStage);
+        screens.showStage();
         /** Todo 连接云端 */
-
-        //bp.setCenter(ChartAnchorPane);
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(bp, 1500, 1000));
-        primaryStage.show();
+//        Platform.setImplicitExit(true);
+//        //bp.setCenter(ChartAnchorPane);
+//        primaryStage.setTitle("Hello World");
+//        primaryStage.setScene(new Scene(bp, 1500, 1000));
+//        primaryStage.show();
     }
 
 

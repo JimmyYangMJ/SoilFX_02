@@ -2,8 +2,8 @@ package com.sspu.service.cloud;
 
 import com.sspu.controller.AlertBox;
 import com.sspu.controller.Channel;
+import com.sspu.controller.CloudView;
 import com.sspu.controller.realTime.RealTimeInfo;
-import com.sun.javafx.application.PlatformImpl;
 import javafx.application.Platform;
 
 import java.io.IOException;
@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Set;
 
-import static com.sspu.SQL.MySql_operate.GetValueByKey;
+import static com.sspu.constants.Config.GetValueByKey;
 
 public class NioClient implements Runnable{
 
@@ -25,28 +25,29 @@ public class NioClient implements Runnable{
 
 	public static int ID = 1;
 
-
 	public static SelectionKey key = null;
 	public static Selector selector = null;
 
-	private static int sendCount = 0;
 
 	/** 提示信息类 （输出到提示框）*/
 	public static RealTimeInfo realTimeInfo;
 
+	/** 云端状态显示*/
+	public static CloudView cloudView;
+
 	@Override
 	public void run() {
 
-		/** 获取 另一个视图 容器的实例*/
+		/** 获取 另一个视图(输出信息框)容器的实例*/
 		realTimeInfo = (RealTimeInfo) Channel.controllers.get(RealTimeInfo.class.getSimpleName());
+		cloudView = (CloudView) Channel.controllers.get(CloudView.class.getSimpleName());
 
 		//String host = "192.168.179.182";
-		String host = "127.0.0.1";
-//		String host = "47.96.130.110";
+		//String host = "127.0.0.1";
+		//String host = "47.96.130.110";
 		int port = 8001;
+		String host =  GetValueByKey("jdbcInfo.properties", "server-ip");
 
-		System.out.print("输入客户端编号：" );
-//		ID = Integer.parseInt(cin.nextLine());
 		ID = Integer.parseInt(GetValueByKey("jdbcInfo.properties", "client-id"));
 
 		System.out.println(ID);
@@ -61,7 +62,6 @@ public class NioClient implements Runnable{
 			// 如果直接连接成功，则注册到多路复用器上，发送请求消息，读应答
 			if (socketChannel.connect(new InetSocketAddress(host, port))) {
 				System.out.println("服务器连接成功");
-				System.out.println("reda 读取");
 				System.out.println(socketChannel.register(selector, SelectionKey.OP_READ));
 				/** 发送 确认 */
 				doWrite(socketChannel, "<accept>");
@@ -74,6 +74,7 @@ public class NioClient implements Runnable{
 			System.exit(1);
 		}
 
+		/** 开启 向服务器发送消息线程 */
 		NioWrite nioWrite = new NioWrite(socketChannel);
 		Thread nioWriteThread = new Thread(nioWrite, "NioWrite");
 		nioWriteThread.setDaemon(true);
@@ -110,15 +111,26 @@ public class NioClient implements Runnable{
 					Platform.runLater(()->{
 						realTimeInfo.log("云端出错:");
 						AlertBox.display("云端出错","远程主机强迫关闭了一个现有的连接");
+						cloudView = (CloudView) Channel.controllers.get(CloudView.class.getSimpleName());
+						cloudView.status.setText("离线");
+						cloudView.closeSyn.setSelected(true);
 					});
 					break ;
 				}
 			}
 		}
 
+//		Platform.runLater(()->{
+//
+//		});
+		// 界面提示
 		Platform.runLater(()->{
-			realTimeInfo.log("云端连接出错, 请重新连接:");
+			cloudView = (CloudView) Channel.controllers.get(CloudView.class.getSimpleName());
+			cloudView.status.setText("离线");
+			cloudView.closeSyn.setSelected(true);
+			AlertBox.display("云端出错","云端连接失败");
 		});
+
 		System.out.println("请重新连接");
 		nioWrite.lock = false;
 	}
@@ -161,6 +173,11 @@ public class NioClient implements Runnable{
 					/** 第一次发送数据 */
 					doWrite(sc, "<request>");
 					System.out.println("连接成功");
+					Platform.runLater(()->{
+						cloudView = (CloudView) Channel.controllers.get(CloudView.class.getSimpleName());
+						cloudView.status.setText("在线");
+						cloudView.realSyn.setSelected(true);
+					});
 				}
 			}
 

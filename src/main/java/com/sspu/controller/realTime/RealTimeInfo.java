@@ -10,6 +10,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.springframework.stereotype.Controller;
 
 import java.net.URL;
 import java.util.Date;
@@ -20,6 +21,7 @@ import java.util.ResourceBundle;
  * @author ymj
  * @Date： 2019/12/18 16:22
  */
+@Controller
 public class RealTimeInfo  implements Initializable{
 
     /** 提示框控件 */

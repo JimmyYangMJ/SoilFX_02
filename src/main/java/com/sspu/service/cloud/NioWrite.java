@@ -26,8 +26,8 @@ public class NioWrite implements Runnable{
     /** 发送数据数据线程*/
     @Override
     public void run() {
-
         while (lock) {
+
             if (socketChannel.isConnected() == false){
                 continue;
             }
@@ -39,11 +39,6 @@ public class NioWrite implements Runnable{
             }catch (IndexOutOfBoundsException e){
 
             }
-//			try {
-//				 Thread.sleep(4000);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
 
 
         }

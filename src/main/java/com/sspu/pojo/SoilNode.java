@@ -1,6 +1,8 @@
 package com.sspu.pojo;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 /**
@@ -16,23 +18,17 @@ public class SoilNode {
     private String state = null;
     /** 监测频率， 单位秒*/
     private int interval_s = 0;
-    /** 经度 */
-    private double lng;
-    /** 纬度 */
-    private double lat;
     /** 信息修改时间 */
-    private Date last_update;
+    private String last_update;
 
     public SoilNode() {
         super();
     }
 
-    public SoilNode(int node, String state, int interval_s, double lng, double lat, Date last_update) {
+    public SoilNode(int node, String state, int interval_s, String last_update) {
         this.node = node;
         this.state = state;
         this.interval_s = interval_s;
-        this.lng = lng;
-        this.lat = lat;
         this.last_update = last_update;
     }
 
@@ -42,8 +38,6 @@ public class SoilNode {
                 "node=" + node +
                 ", state='" + state + '\'' +
                 ", interval_s=" + interval_s +
-                ", lng=" + lng +
-                ", lat=" + lat +
                 ", last_update=" + last_update +
                 '}';
     }
@@ -72,28 +66,13 @@ public class SoilNode {
         this.interval_s = interval_s;
     }
 
-    public double getLng() {
-        return lng;
-    }
 
-    public void setLng(double lng) {
-        this.lng = lng;
-    }
-
-    public double getLat() {
-        return lat;
-    }
-
-    public void setLat(double lat) {
-        this.lat = lat;
-    }
-
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT")
-    public Date getLast_update() {
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT")
+    public String getLast_update() {
         return last_update;
     }
 
-    public void setLast_update(Date last_update) {
+    public void setLast_update(String last_update) {
         this.last_update = last_update;
     }
 }
