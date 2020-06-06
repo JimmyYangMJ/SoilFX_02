@@ -1,8 +1,6 @@
 package com.sspu.service.send;
 
-import com.sspu.controller.AlertBox;
-import com.sspu.controller.port.PortTest;
-import com.sspu.controller.send.PortSend;
+import com.sspu.controller.port.PortListener;
 
 import java.io.IOException;
 
@@ -17,22 +15,22 @@ public class SendInterval implements Runnable{
     /** 定时 间隔 ： S*/
     public static int interval = 1;
 
-    private final Object lock = new Object();
+    private static Object lock = new Object();
 
-    private volatile boolean pause = false;
+    private static volatile boolean pause = false;
 
-    private volatile boolean stop = false;
+    private static volatile boolean stop = false;
     /**
      * 调用该方法实现线程的暂停
      */
-    public void pauseThread(){
+    public static void pauseThread(){
         pause = true;
     }
 
     /**
     调用该方法实现恢复线程的运行
      */
-    public void resumeThread(){
+    public static void resumeThread(){
 
         pause =false;
         synchronized (lock){
@@ -43,14 +41,14 @@ public class SendInterval implements Runnable{
     /**
      调用该方法实现恢复线程的运行
      */
-    public void stopThread(){
+    public static void stopThread(){
         stop =true;
     }
 
     /**
      * 这个方法只能在run 方法中实现，不然会阻塞主线程，导致页面无响应
      */
-    public void onPause() {
+    public static void onPause() {
         synchronized (lock) {
             try {
                 lock.wait();
@@ -76,8 +74,8 @@ public class SendInterval implements Runnable{
             String message = "09 02 21 12 15 01 00 6f 04";
 
             try {
-                PortTest.outputStream.write(stringTransByte(message));
-                PortTest.outputStream.flush();
+                PortListener.outputStream.write(stringTransByte(message));
+                PortListener.outputStream.flush();
             } catch (IOException e) {
                 e.printStackTrace();
             }

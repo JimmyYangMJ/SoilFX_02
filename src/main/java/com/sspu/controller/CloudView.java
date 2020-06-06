@@ -37,7 +37,7 @@ public class CloudView implements Initializable {
     private static Object lock = new Object();
 
     public CloudView(){
-        // NIO 云端通信
+        // NIO 云端通信，
         threadNioClient = new Thread(nioClient);
         threadNioClient.setDaemon(true);
         threadNioClient.start();
@@ -57,9 +57,9 @@ public class CloudView implements Initializable {
     }
     public void closeSynFunction() {
 
-            System.out.println("关闭同步");
-            threadNioClient.interrupt();
-            status.setText("离线");
+        System.out.println("关闭同步");
+        threadNioClient.stop();
+        status.setText("离线");
 
     }
 

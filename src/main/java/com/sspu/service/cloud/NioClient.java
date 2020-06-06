@@ -4,7 +4,9 @@ import com.sspu.controller.AlertBox;
 import com.sspu.controller.Channel;
 import com.sspu.controller.CloudView;
 import com.sspu.controller.realTime.RealTimeInfo;
+import com.sspu.pojo.DataAD;
 import javafx.application.Platform;
+import jdk.internal.org.objectweb.asm.TypeReference;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -19,15 +21,21 @@ import java.util.Set;
 
 import static com.sspu.constants.Config.GetValueByKey;
 
+/**
+ * NIO 通信入口
+ */
 public class NioClient implements Runnable{
 
 	public static Scanner cin = new Scanner(System.in);
 
-	public static int ID = 1;
+	public static boolean cloudStatus = false;
+
+	public static int ID = Integer.parseInt(GetValueByKey("jdbcInfo.properties", "client-id"));;
+	private static int port = Integer.parseInt(GetValueByKey("jdbcInfo.properties", "server-port"));
+	private static String host =  GetValueByKey("jdbcInfo.properties", "server-ip");
 
 	public static SelectionKey key = null;
 	public static Selector selector = null;
-
 
 	/** 提示信息类 （输出到提示框）*/
 	public static RealTimeInfo realTimeInfo;
@@ -35,6 +43,9 @@ public class NioClient implements Runnable{
 	/** 云端状态显示*/
 	public static CloudView cloudView;
 
+	/**
+	 * 接收 服务器指令
+	 */
 	@Override
 	public void run() {
 
@@ -42,17 +53,8 @@ public class NioClient implements Runnable{
 		realTimeInfo = (RealTimeInfo) Channel.controllers.get(RealTimeInfo.class.getSimpleName());
 		cloudView = (CloudView) Channel.controllers.get(CloudView.class.getSimpleName());
 
-		//String host = "192.168.179.182";
-		//String host = "127.0.0.1";
-		//String host = "47.96.130.110";
-		int port = 8001;
-		String host =  GetValueByKey("jdbcInfo.properties", "server-ip");
-
-		ID = Integer.parseInt(GetValueByKey("jdbcInfo.properties", "client-id"));
-
 		System.out.println(ID);
 
-		selector = null;
 		SocketChannel socketChannel = null;
 		try {
 			selector = Selector.open(); // 开选择器
@@ -64,7 +66,7 @@ public class NioClient implements Runnable{
 				System.out.println("服务器连接成功");
 				System.out.println(socketChannel.register(selector, SelectionKey.OP_READ));
 				/** 发送 确认 */
-				doWrite(socketChannel, "<accept>");
+				doWrite(socketChannel, "accept");
 			} else { // 没有建立连接
 				socketChannel.register(selector, SelectionKey.OP_CONNECT); // 选择器和通道 注册绑定
 				System.out.println("选择器注册成功， connect 连接");
@@ -80,6 +82,7 @@ public class NioClient implements Runnable{
 		nioWriteThread.setDaemon(true);
 		nioWriteThread.start();
 
+		cloudStatus = true;
 
 		tip:
 		while (true) {
@@ -92,7 +95,7 @@ public class NioClient implements Runnable{
 					key = it.next();
 					it.remove();
 					try {
-						// 处理每一个channel
+						/** 处理每一个channel */
 						handleInput(selector, key);
 					}catch (ConnectException e) {
 						System.out.println("连接异常");
@@ -120,10 +123,7 @@ public class NioClient implements Runnable{
 			}
 		}
 
-//		Platform.runLater(()->{
-//
-//		});
-		// 界面提示
+		/** 提示框 提示 云端连接出错 */
 		Platform.runLater(()->{
 			cloudView = (CloudView) Channel.controllers.get(CloudView.class.getSimpleName());
 			cloudView.status.setText("离线");
@@ -131,20 +131,37 @@ public class NioClient implements Runnable{
 			AlertBox.display("云端出错","云端连接失败");
 		});
 
-		System.out.println("请重新连接");
 		nioWrite.lock = false;
 	}
 
 	/**
 	 * 写数据
 	 * @param sc
-	 * @param message 格式：[id]：[message]
+	 * @param message 格式：<1,%s,%d,>
 	 * @return -1: 通道连接断开， 1；数据已发送， -2：没有要发送的数据
 	 * @throws IOException
 	 */
 	public static int doWrite(SocketChannel sc, String message) throws IOException {
 
-		message = Integer.toString(ID) + ":" + message;
+		message = String.format("<1,%s,%d,>", message, ID);
+
+		byte[] str = message.getBytes();
+		ByteBuffer writeBuffer = ByteBuffer.allocate(str.length);
+		writeBuffer.put(str);
+		writeBuffer.flip();
+		sc.write(writeBuffer); // 向通道发送数据
+
+		return  1;
+	}
+
+	/** 发送水势数据
+	 * <[参数个数],[参数类型],[发送端],[AD],[AD_base],[水势值],[时间],>
+	 * <6,1,1,1.2,1.5,6.4,2020-06-06 12:12:13,>
+	 *     */
+	public static int doWrite(SocketChannel sc, DataAD dataAD) throws IOException {
+
+		String message = String.format("<6,1,%d,%.2f,%.2f,%.2f,%s,>",
+				ID, dataAD.getAd(), dataAD.getAd_base(), dataAD.getHumidity(), dataAD.getTime());
 
 		byte[] str = message.getBytes();
 		ByteBuffer writeBuffer = ByteBuffer.allocate(str.length);
@@ -170,8 +187,8 @@ public class NioClient implements Runnable{
 
 				if (sc.finishConnect()) {
 					sc.register(selector, SelectionKey.OP_READ); // 可以读数据
-					/** 第一次发送数据 */
-					doWrite(sc, "<request>");
+					/** 第一次发送数据，连接请求 */
+					doWrite(sc, "request");
 					System.out.println("连接成功");
 					Platform.runLater(()->{
 						cloudView = (CloudView) Channel.controllers.get(CloudView.class.getSimpleName());
@@ -181,6 +198,9 @@ public class NioClient implements Runnable{
 				}
 			}
 
+			/**
+			 * 读取服务器 数据
+			 */
 			if (key.isReadable()) {
 				ByteBuffer readBuffer = ByteBuffer.allocate(1024);
 				int readBytes = sc.read(readBuffer);
@@ -188,12 +208,15 @@ public class NioClient implements Runnable{
 					readBuffer.flip();
 					byte[] bytes = new byte[readBuffer.remaining()];
 					readBuffer.get(bytes);
-					String body = new String(bytes, "UTF-8");
+					String MessageReceived = new String(bytes, "UTF-8");
+
 
 					// Todo 数据处理
-					if (message(body) == 3){
+					if (handleMessage(MessageReceived) == 3){
+						/** 分析并执行指令 */
+						Execution.handleInfo(MessageReceived);
 						/** 返回确认数据 */
-						doWrite(sc,"<accept>");
+						doWrite(sc,"accept");
 					}
 
 				} else if (readBytes < 0) {
@@ -213,16 +236,21 @@ public class NioClient implements Runnable{
 	 * @param message
 	 * @return 1：发送包的确认, 2 心跳包, 3 数据包
 	 */
-	public static int message(String message){
-		if(message.trim().equals("<accept>")){
+	public static int handleMessage(String message){
+
+		String[] m = message.split(",");
+
+		if(m[1].trim().equals("accept")){
 			System.out.println("发送成功");
 			return 1;
-		}else if(message.trim().equals("<tick>")){
+		}else if(m[1].trim().equals("tick")){
 			return 2;
 		}else{
-			System.out.println("Server said 6: " + message);
+			System.out.println("Server said : " + message);
 			return 3;
 		}
+
+
 	}
 
 }

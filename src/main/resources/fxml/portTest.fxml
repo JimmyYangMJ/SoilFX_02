@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Text?>
 
-<HBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="148.0" prefWidth="554.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sspu.controller.port.PortTest">
+<HBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="148.0" prefWidth="554.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sspu.controller.port.PortListener">
    <children>
       <AnchorPane prefHeight="100.0" prefWidth="122.0">
          <children>

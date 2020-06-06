@@ -1,20 +1,13 @@
 package com.sspu.startUp;
 
-import com.sspu.constants.SpringFxmlLoader;
 import com.sspu.controller.chart.JavaFXChart;
-import com.sspu.controller.port.PortTest;
+import com.sspu.controller.port.PortListener;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.springframework.context.annotation.Configuration;
 
 import static com.sspu.controller.chart.JavaFXChart.seriesArray;
 
@@ -104,8 +97,8 @@ public class Main extends Application {
         // javaFXLine.stop();      //停止线程，过时方法
         try {
             /** 串口关闭 */
-            PortTest.serialPort.close();
-            System.out.print("结束");
+            PortListener.serialPort.close();
+            System.out.print("===结束===");
         }catch (Exception e){
             //log("尚未端口没有打开");
         } //关闭端口

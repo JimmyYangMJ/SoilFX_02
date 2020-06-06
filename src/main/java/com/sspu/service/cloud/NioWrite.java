@@ -1,5 +1,7 @@
 package com.sspu.service.cloud;
 
+import com.sspu.pojo.DataAD;
+
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 import java.util.Scanner;
@@ -19,6 +21,10 @@ public class NioWrite implements Runnable{
     private static SocketChannel socketChannel = null;
 
     public volatile boolean lock = true;
+
+    public static DataAD dataAD = null;
+
+
     public NioWrite(SocketChannel socketChannel){
         this.socketChannel = socketChannel;
 
@@ -27,18 +33,33 @@ public class NioWrite implements Runnable{
     @Override
     public void run() {
         while (lock) {
+            if (NioClient.cloudStatus == true && dataAD != null){
+                if (socketChannel.isConnected() == false){
+                    continue;
+                }
+                try {
+                    doWrite(socketChannel, dataAD);
+                    dataAD = null;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }catch (IndexOutOfBoundsException e){
 
-            if (socketChannel.isConnected() == false){
-                continue;
-            }
-            try {
-                String message = cin.nextLine();
-                doWrite(socketChannel, message);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }catch (IndexOutOfBoundsException e){
+                }
+
 
             }
+//
+//            if (socketChannel.isConnected() == false){
+//                continue;
+//            }
+//            try {
+//                String message = cin.nextLine();
+//                doWrite(socketChannel, message);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }catch (IndexOutOfBoundsException e){
+//
+//            }
 
 
         }

@@ -1,11 +1,14 @@
 package com.sspu.pojo;
 
+import org.springframework.stereotype.Component;
+
 /**
  * AD 数据
  * 表格显示
  * @author ymj
  * @Date： 2019/12/18 20:25
  */
+
 public class DataAD {
 
     private int node;

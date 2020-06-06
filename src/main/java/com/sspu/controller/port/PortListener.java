@@ -1,10 +1,13 @@
 package com.sspu.controller.port;
 
-import com.mysql.cj.jdbc.SuspendableXAConnection;
 import com.sspu.controller.AlertBox;
 import com.sspu.controller.Channel;
 import com.sspu.controller.realTime.RealTimeInfo;
+import com.sspu.pojo.DataAD;
+import com.sspu.service.cloud.NioClient;
+import com.sspu.service.cloud.NioWrite;
 import com.sspu.service.handerData.CRC;
+import com.sspu.service.handerData.DataConvert;
 import gnu.io.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,7 +27,7 @@ import java.util.*;
  * @author ymj
  * @Date： 2019/12/18 15:11
  */
-public class PortTest implements Initializable , SerialPortEventListener {
+public class PortListener implements Initializable , SerialPortEventListener {
 
     private int timeout = 1000;//open端口时的等待时间
 
@@ -51,7 +54,18 @@ public class PortTest implements Initializable , SerialPortEventListener {
     /** 消息信息*
      * int：10 进制表示
      */
-    public static int[] message = null;
+    private static int[] message = null;
+
+    /** 消息信息 */
+    public static DataAD dateAD = null;
+
+    public static DataAD getDateAD() {
+        return dateAD;
+    }
+
+    public static void setDateAD(DataAD dateAD) {
+        PortListener.dateAD = dateAD;
+    }
 
     private static LinkedList<String> ports;
 
@@ -236,9 +250,9 @@ public class PortTest implements Initializable , SerialPortEventListener {
                      * s2为接收到数据 格式： 16进制 + CRC校验码
                      *t1存放CRC校验前的数据，t2为CRC校验后的数据
                      */
-                    if (dataValidation_CRC(readBuffer) == false) {
-                        break;
-                    }else { /********数据正确*********/
+//                    if (dataValidation_CRC(readBuffer) == true) { // 为了测试方便，暂时关闭 CRC 校验
+                    if (true) {
+                         /********数据正确*********/
                         message = new int[messageLength];
                         /** 16 进制 转换 10 进制
                          * 输出到 message 数组中
@@ -254,11 +268,21 @@ public class PortTest implements Initializable , SerialPortEventListener {
                         realTimeInfo.log("接收到端口返回数据" +"(长度为" + message.length + ")" );
                         realTimeInfo.log(Arrays.toString(message));
 
+                        // Todo 这里没有判断接收数据的类型，默认为水势数据
+                        /** 串口数据 封装为 bean 对象 */
+                        setDateAD(DataConvert.createDataAD(message)) ;
+
                         messageState = true; // 标记接收到数据
+
+
+                        // Todo 云端传输
+                        if (NioClient.cloudStatus == true) {
+                            NioWrite.dataAD = dateAD;
+                        }
 
                         // Todo 存入数据库
 
-                        // Todo 云端传输
+
                     }
 
                 } catch (IOException e) {

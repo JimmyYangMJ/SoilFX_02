@@ -18,9 +18,9 @@ public class PortSend {
     @FXML TextField interval;
 
     /** 定时发送数据线程 */
-    static Thread intervalSend;
+    public static Thread intervalSend;
 
-    static SendInterval sendInterval;
+    public static SendInterval sendInterval;
 
     /** 控件：确定
      * service： SendInterval*/
