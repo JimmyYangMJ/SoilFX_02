@@ -11,7 +11,7 @@
     <properties>
 
         <slf4j-log4j12.version>1.7.21</slf4j-log4j12.version>
-        <jackson-databind.version>2.9.10.1</jackson-databind.version>
+        <jackson-databind.version>2.9.10.7</jackson-databind.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
