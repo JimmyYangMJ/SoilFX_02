@@ -67,4 +67,15 @@ public class DataAD {
     public void setTime(String time) {
         this.time = time;
     }
+
+    @Override
+    public String toString() {
+        return "DataAD{" +
+                "node=" + node +
+                ", ad=" + ad +
+                ", ad_base=" + ad_base +
+                ", humidity=" + humidity +
+                ", time='" + time + '\'' +
+                '}';
+    }
 }

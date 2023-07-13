@@ -11,4 +11,14 @@
         from soil_node
     </select>
 
+    <insert id="insertSoilWater" parameterType="com.sspu.pojo.DataAD" >
+        INSERT INTO soil_water(node, ad, ad_base, humidity, times)
+        VALUE (#{node}, #{ad}, #{ad_base}, #{humidity}, #{time});
+    </insert>
+
+    <select id="selectCurrentBinLog" resultType="com.sspu.pojo.BinLog">
+        select *
+        from soil_node
+    </select>
+
 </mapper>

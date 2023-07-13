@@ -6,6 +6,7 @@
 <!-- 映射文件位置  告诉mybatis 加载映射文件-->
     <mappers>
         <mapper resource="mapper/SoilNodeMapper.xml"></mapper>
+        <mapper resource="mapper/MysqlBinLogMapper.xml"></mapper>
     </mappers>
 
 </configuration>

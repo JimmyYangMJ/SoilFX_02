@@ -23,7 +23,7 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <Label fx:id="updateTime" layoutX="173.0" layoutY="36.0" text="2020.03.20 12:01:59">
+            <Label fx:id="updateTime" layoutX="173.0" layoutY="36.0" text="2020.05.20 12:01:59">
                <font>
                   <Font size="15.0" />
                </font>

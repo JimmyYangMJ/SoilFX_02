@@ -2,9 +2,10 @@ package com.sspu.controller.table;
 
 
 import com.sspu.constants.NodeStatus;
+import com.sspu.pojo.BinLog;
 import com.sspu.pojo.SoilNode;
+import com.sspu.service.IBinLogService;
 import com.sspu.service.ISoilNodeService;
-import com.sspu.service.impl.SoilNodeServiceImpl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,12 +14,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Controller;
 
 import java.net.URL;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
@@ -44,7 +42,11 @@ public class NodeTable implements Initializable {
     public static ObservableList<SoilNode> RealList;
 
     @Autowired
-    ISoilNodeService soilNodeService;
+    public ISoilNodeService soilNodeService;
+
+    @Autowired
+    IBinLogService iBinLogService;
+
     /**
      * 查询具体结点信息 Lookup 按钮
      * @return ResultSet
@@ -57,6 +59,15 @@ public class NodeTable implements Initializable {
         try {
 //            List<SoilNode> rs = nodeTable.soilNodeService.selectSoilNodeSet();
             List<SoilNode> rs = soilNodeService.selectSoilNodeSet();
+
+            List<BinLog> logs = iBinLogService.selectCurrentBinLog();
+            System.out.println(logs.size());
+            Iterator<BinLog> iterator1 = logs.iterator();
+            while (iterator1.hasNext()) {
+                BinLog binLog = iterator1.next();
+                System.out.println(binLog.getLog_name() + "/" + binLog.getFile_size());
+            }
+
             Iterator<SoilNode> iterator = rs.iterator();
             SoilNode soilNode;
             while(iterator.hasNext()) {

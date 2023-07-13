@@ -3,7 +3,10 @@ package com.sspu.controller.port;
 import com.sspu.controller.AlertBox;
 import com.sspu.controller.Channel;
 import com.sspu.controller.realTime.RealTimeInfo;
+import com.sspu.controller.table.NodeTable;
 import com.sspu.pojo.DataAD;
+import com.sspu.pojo.SoilNode;
+import com.sspu.service.ISoilNodeService;
 import com.sspu.service.cloud.NioClient;
 import com.sspu.service.cloud.NioWrite;
 import com.sspu.service.handerData.CRC;
@@ -13,8 +16,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 
+import javax.annotation.PostConstruct;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,14 +35,24 @@ import java.util.*;
  * @author ymj
  * @Date： 2019/12/18 15:11
  */
+@Controller
 public class PortListener implements Initializable , SerialPortEventListener {
 
     private int timeout = 1000;//open端口时的等待时间
 
+    @Autowired
+    public ISoilNodeService soilNodeService;
+
+    /** 在 非 Spring 类中 使用 */
+    public static PortListener portListener;
+    @PostConstruct
+    public void init(){
+        portListener = this;
+    }
+
     /** RXTX com端口检测*/
     public CommPortIdentifier commPort;
     public static SerialPort serialPort;        //RXTX
-
 
     private static InputStream inputStream; //输入流
     public static OutputStream outputStream = null; //输出流
@@ -278,9 +296,21 @@ public class PortListener implements Initializable , SerialPortEventListener {
                         // Todo 云端传输
                         if (NioClient.cloudStatus == true) {
                             NioWrite.dataAD = dateAD;
+                            System.out.println("进行云端通信");
                         }
 
-                        // Todo 存入数据库
+                        /**
+                         * Todo 存入数据库 DataAD
+                          */
+                        System.out.println("插入数据库:" + dateAD.toString());
+
+                        try {
+                            int temp = portListener.soilNodeService.insertSoilWater(dateAD);
+                            System.out.println("插入数据库:" + temp);
+                        }catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
 
 
                     }

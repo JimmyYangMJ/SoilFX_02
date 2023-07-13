@@ -32,7 +32,7 @@ public class SendInterval implements Runnable{
      */
     public static void resumeThread(){
 
-        pause =false;
+        pause = false;
         synchronized (lock){
             lock.notify();
         }

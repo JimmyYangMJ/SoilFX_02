@@ -209,7 +209,7 @@ public class NioClient implements Runnable{
 					byte[] bytes = new byte[readBuffer.remaining()];
 					readBuffer.get(bytes);
 					String MessageReceived = new String(bytes, "UTF-8");
-
+					System.out.println(MessageReceived);
 
 					// Todo 数据处理
 					if (handleMessage(MessageReceived) == 3){

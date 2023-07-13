@@ -1,5 +1,6 @@
 package com.sspu.service;
 
+import com.sspu.pojo.DataAD;
 import com.sspu.pojo.SoilNode;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,14 @@ public interface ISoilNodeService {
      * @return 结点相关信息 List
      */
     List<SoilNode> selectSoilNodeSet();
+
+    /**
+     * 插入水势数据
+     * @param dataAD
+     * @return
+     */
+    int insertSoilWater(DataAD dataAD);
+
 
 
 }

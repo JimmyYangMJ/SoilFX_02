@@ -1,6 +1,7 @@
 package com.sspu.dao;
 
 
+import com.sspu.pojo.DataAD;
 import com.sspu.pojo.SoilNode;
 import org.apache.ibatis.annotations.Param;
 
@@ -17,5 +18,12 @@ public interface SoilNodeMapper {
      * @return 结点信息表
      */
     List<SoilNode> selectSoilNodeSet();
+
+    /**
+     * 插入水势数据
+     * @param dataAD
+     * @return
+     */
+    int insertSoilWater(DataAD dataAD);
 
 }
